@@ -1,4 +1,5 @@
 import { Inter } from 'next/font/google'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,11 +29,11 @@ export default function Detail() {
             </model-viewer>
           </div> 
           <div className="self-center">
-            <a href="/detail">
-              <button class="mt-10 bg-white hover:bg-red-300 text-black font-bold font-serif py-3 px-5 rounded">
+            <Link href="/detail">
+              <button className="mt-10 bg-white hover:bg-red-300 text-black font-bold font-serif py-3 px-5 rounded">
                 詳しく見る
               </button>
-            </a>
+            </Link>
           </div>
         </div>
         
