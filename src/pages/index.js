@@ -1,10 +1,16 @@
 import { Inter } from 'next/font/google'
+import Head from 'next/head';
 import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Detail() {
     return (
+    <>
+      <Head>
+        <title>BookCube</title>
+        <meta name="description" content="本のキューブ" />
+      </Head>
       <main
         className={`flex min-h-[100vh] flex-col items-center p-24 gap-10 ${inter.className}`}
       >
@@ -38,5 +44,6 @@ export default function Detail() {
         </div>
         
       </main>
+      </>
     )
   }
