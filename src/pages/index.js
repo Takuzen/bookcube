@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google'
 import Head from 'next/head';
 import Link from 'next/link'
+import BookCube from './cubeRender';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,17 +23,7 @@ export default function Detail() {
         
         <div className="z-10 flex flex-col justify-center" style={{ width: '500px', height: '500px' }}>
           <div> 
-            <model-viewer
-              style={{ width: '500px', height: '500px' }}
-              src="/scene.glb"
-              width="500px"
-              height="500px"
-              alt="A 3D model of a table with food on it"
-              ar
-              shadow-intensity="1"
-              camera-controls
-              touch-action="pan-y">  
-            </model-viewer>
+            <BookCube />
           </div> 
           <div className="self-center">
             <Link href="/detail">
