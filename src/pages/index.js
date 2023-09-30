@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head';
 import Link from 'next/link'
 import BookCube from './cubeRender';
+import Search from './search';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,6 +32,9 @@ export default function Detail() {
                 詳しく見る
               </button>
             </Link>
+          </div>
+          <div className="self-center">
+            <Search />
           </div>
         </div>
         
