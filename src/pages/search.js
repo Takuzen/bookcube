@@ -28,8 +28,8 @@ const Search = ({ addBook }) => {
     }
 
     try {
-      const API_KEY = 'AIzaSyDqkAcWpmFzLdzWzCUNv836JnHKuCccILY'; // Your API Key
-      const result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${API_KEY}`);
+      const apikey = process.env.GOOGLE_API_KEY
+      const result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apikey}`);
 
       if (result.data && result.data.items) {
         const newBooks = await Promise.all(result.data.items.map(async (book) => {
