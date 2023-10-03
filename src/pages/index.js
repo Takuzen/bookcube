@@ -2,7 +2,6 @@ import { Inter } from 'next/font/google'
 import Head from 'next/head';
 import Link from 'next/link'
 import BookCube from './cubeRender';
-import Search from './search';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,7 +21,10 @@ export default function Detail() {
           </h1>
         </div>
         
-        <div className="z-10 flex flex-col justify-center" style={{ width: '500px', height: '500px' }}>
+        <div className="z-10 flex flex-col justify-center">
+          <div className='self-center'>
+            <p>Weekly Cube</p>
+          </div>
           <div> 
             <BookCube />
           </div> 
@@ -34,7 +36,11 @@ export default function Detail() {
             </Link>
           </div>
           <div className="self-center">
-            <Search />
+            <Link href="/create">
+              <button className="absolute bottom-10 right-10 bg-basedark hover:bg-base text-white font-bold font-serif py-4 px-12 rounded-full">
+                Create
+              </button>
+            </Link>
           </div>
         </div>
         
