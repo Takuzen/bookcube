@@ -28,7 +28,7 @@ const Search = ({ addBook }) => {
     }
 
     try {
-      const apikey = process.env.GOOGLE_API_KEY
+      const apikey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
       const result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apikey}`);
 
       if (result.data && result.data.items) {
