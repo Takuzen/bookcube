@@ -3,12 +3,19 @@ import * as THREE from 'three';
 
 const BookCube = ({ addedBooks }) => {
   useEffect(() => {
+    // Remove existing canvas if any
+    const container = document.getElementById('book-cube-container');
+    const existingCanvas = container.querySelector('canvas');
+    if (existingCanvas) {
+      container.removeChild(existingCanvas);
+    }
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(500, 500);
     renderer.setClearColor(0xFFFFFF, 1);
-    document.getElementById('book-cube-container').appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     const geometry = new THREE.BoxGeometry(4, 4, 4);
     const materials = [];
