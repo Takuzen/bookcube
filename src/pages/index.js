@@ -1,11 +1,27 @@
 import Head from 'next/head';
 import Link from 'next/link'
+import Image from 'next/image'
 import BookCube from './cubeRender';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { auth } from "./utils/firebase";
 
 export default function Home() {
   const [user, setUser] = useState(null);
-    return (
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // Client-side only code
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe(); // Cleanup subscription
+  }, []);
+
+  return (
     <>
       <Head>
         <title>BookCube</title>
@@ -18,12 +34,25 @@ export default function Home() {
             Book SP
           </h1>
         </div>
-        <div id="account" className="flex gap-10 items-center">
+        <div id="auth" className="flex gap-10 items-center">
           {user ? (
-            <div className="">Welcome, {user.email}</div>
+            <div>
+              <Link href="/profile">
+                <Image
+                  src="/default_profile_image.png"
+                  alt="Default Profile Image"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  priority
+                />
+              </Link>
+            </div>
           ) : (
             <>
-              <div className="">Login</div>
+              <Link href="/login">
+                <div className="">Login</div>
+              </Link>
               <Link href="/signup">
                 <div className="bg-[#f5bf34] text-white font-bold px-5 py-2 rounded-lg hover:opacity-70">Sign Up</div>
               </Link>
@@ -36,7 +65,7 @@ export default function Home() {
             <p className='text-[#DB4D6D] font-black font-serif text-xl'>Weekly Pick</p>
           </div>
           <div className='self-center'> 
-            <BookCube />
+            { isClient ? <model-viewer src="/scene.glb" alt="Your 3D model" width="300px" height="300px" auto-rotate rotation-per-second="30deg" camera-controls camera-orbit="45deg 55deg 4m" shadow-intensity="1"></model-viewer> : 'Loading model...' }
           </div>
           <div className="flex flex-col gap-7">
           <div className='self-center'>
@@ -51,19 +80,27 @@ export default function Home() {
           
             <Link href="/detail">
               <button className=" text-black font-bold font-serif rounded underline-offset-8 underline">
-                詳しく見る
+                See details
               </button>
             </Link>
           </div>
           </div>
         </section>
         <div className="self-center">
-            <Link href="/create">
-              <button className="absolute bottom-10 right-10 bg-[#f5bf34] hover:opacity-70 text-white font-bold font-serif py-4 px-12 rounded-full">
-                Create Your Cube
-              </button>
-            </Link>
-          </div>
+        {user ? (
+          <Link href="/create">
+            <button className="absolute bottom-10 right-10 bg-[#f5bf34] hover:opacity-70 text-white font-bold font-serif py-4 px-12 rounded-full">
+              Create Your Cube
+            </button>
+          </Link>
+        ) : (
+          <Link href="/login">
+            <button className="absolute bottom-10 right-10 bg-[#f5bf34] hover:opacity-70 text-white font-bold font-serif py-4 px-12 rounded-full">
+              Create Your Cube
+            </button>
+          </Link>
+        )}
+      </div>
       </main>
       </>
     )

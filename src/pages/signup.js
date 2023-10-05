@@ -38,14 +38,7 @@ export default function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
   
-      // Log the UID right after the user is created
-      console.log("UID after user creation: ", user.uid);
-  
-      // Log the UID being added to Firestore
-      console.log("UID being added to Firestore: ", user.uid);
-  
-      // Explicitly set the document ID to match the user's UID
-      const docRef = doc(db, 'users', user.uid);  // Import `doc` and `setDoc` from 'firebase/firestore'
+      const docRef = doc(db, 'users', user.uid);
   
       await setDoc(docRef, {
         userId: user.uid,
@@ -55,7 +48,7 @@ export default function SignUp() {
       });
   
       console.log('User signed up successfully!');
-      router.push('/account');  // Redirect to another page after successful signup
+      router.push('/profile');
     } catch (error) {
       const errorMessage = error.code ? getErrorMessage(error.code) : 'An error occurred. Please try again.';
       setError(errorMessage);
@@ -63,8 +56,6 @@ export default function SignUp() {
     }
   };
   
-  
-
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f2f2f2' }}>
       <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
