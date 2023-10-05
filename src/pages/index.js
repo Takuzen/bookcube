@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import Link from 'next/link'
 import BookCube from './cubeRender';
+import { useState } from 'react';
 
-export default function Detail() {
+export default function Home() {
+  const [user, setUser] = useState(null);
     return (
     <>
       <Head>
@@ -17,9 +19,17 @@ export default function Detail() {
           </h1>
         </div>
         <div id="account" className="flex gap-10 items-center">
-          <div className="">Login</div>
-          <div className="bg-[#f5bf34] text-white font-bold px-5 py-2 rounded-lg hover:opacity-70">Sign Up</div>
-        </div>
+          {user ? (
+            <div className="">Welcome, {user.email}</div>
+          ) : (
+            <>
+              <div className="">Login</div>
+              <Link href="/signup">
+                <div className="bg-[#f5bf34] text-white font-bold px-5 py-2 rounded-lg hover:opacity-70">Sign Up</div>
+              </Link>
+            </>
+          )}
+      </div>
         </section>
         <section id="weekly-pick" className="z-10 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100vw]">
           <div className='self-center'>
