@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth, db } from "./utils/firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
 function getErrorMessage(code) {
   switch (code) {
@@ -26,14 +26,26 @@ function getErrorMessage(code) {
 export default function SignUp() {
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const isUsernameUnique = async () => {
+    const q = query(collection(db, 'users'), where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.empty;
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
   
+    if (!(await isUsernameUnique())) {
+      setError('Username already exists. Please choose another.');
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -45,6 +57,7 @@ export default function SignUp() {
         email: user.email,
         givenName,
         familyName,
+        username,
       });
   
       console.log('User signed up successfully!');
@@ -75,6 +88,13 @@ export default function SignUp() {
             placeholder="Family Name"
             value={familyName}
             onChange={(e) => setFamilyName(e.target.value)}
+          />
+          <input
+            style={{ display: 'block', width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '4px' }}
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <input
             style={{ display: 'block', width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '4px' }}

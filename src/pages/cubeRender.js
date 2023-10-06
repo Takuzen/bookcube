@@ -23,7 +23,7 @@ const BookCube = ({ addedBooks }) => {
 
     for (let i = 0; i < 6; i++) {
       const book = addedBooks && addedBooks[i] ? addedBooks[i] : null;
-      const imageURL = book ? book.localThumbnail : '/default-cover1.png'; // Use local thumbnail or a default image
+      const imageURL = book ? book.localThumbnail : '/default-cover1.png';
 
       loader.load(
         imageURL, 

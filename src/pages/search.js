@@ -44,7 +44,7 @@ const Search = ({ addBook }) => {
         }));
 
         setBooks(newBooks);
-        setShowResults(true);  // Show results when search is done
+        setShowResults(true);
       } else {
         console.error('Invalid API response:', result);
       }
@@ -65,7 +65,7 @@ const Search = ({ addBook }) => {
           <div className='border rounded'>
             <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
           </div>
-          <div className='bg-basedark text-white font-serif font-black rounded-full text-center px-4 py-2 hover:bg-base hover: cursor-pointer focus:opacity-70'>  
+          <div className='bg-[#f5bf34] text-white font-serif font-black rounded-full text-center px-4 py-2 hover:opacity-70 hover: cursor-pointer focus:opacity-70'>  
             <button type="submit">Search Books</button>
           </div>
         </div>
