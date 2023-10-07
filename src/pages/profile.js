@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db } from './utils/firebase';
+import { auth, db } from '../lib/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import Image from 'next/image';
 

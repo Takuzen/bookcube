@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import axios from 'axios';
 
 const Search = ({ addBook }) => {
@@ -10,9 +11,12 @@ const Search = ({ addBook }) => {
     setShowResults(false);
   };
 
+  // Updated fetchLocalImage function
   const fetchLocalImage = async (url) => {
     try {
-      const res = await fetch(`/api/fetchImage?imageUrl=${encodeURIComponent(url)}`);
+      // Modify URL to request higher quality image
+      const highQualityUrl = url.replace('zoom=1', 'zoom=2');
+      const res = await fetch(`/api/fetchImage?imageUrl=${encodeURIComponent(highQualityUrl)}`);
       const data = await res.json();
       return data.data;
     } catch (error) {
@@ -28,7 +32,7 @@ const Search = ({ addBook }) => {
     }
 
     try {
-      const apikey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY
+      const apikey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
       const result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apikey}`);
 
       if (result.data && result.data.items) {
@@ -77,7 +81,7 @@ const Search = ({ addBook }) => {
           </button>
           {books.map((book, index) => (
             <div key={index} className="p-2">
-              {book.localThumbnail ? <img src={book.localThumbnail} alt={`${book.title} cover`} /> : <p>No Thumbnail</p>}
+              {book.localThumbnail ? <Image src={book.localThumbnail} alt={`${book.title} cover`} width={100} height={130} className="mb-2"/> : <p>No Thumbnail</p>}
               <h2>{book.title}</h2>
               <p>{book.author}</p>
               <button onClick={() => addBook(book)} className="bg-blue-500 text-white rounded px-2 py-1">Add</button>

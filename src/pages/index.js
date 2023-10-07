@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import BookCube from './cubeRender';
 import { useState, useEffect } from 'react';
-import { auth } from "./utils/firebase";
+import { auth } from "../lib/firebase";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -74,7 +74,11 @@ export default function Home() {
             </Link>
           </div>
           <div className="">  
-            <p className=''>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. <span className='text-gray-400'>read more ...</span></p>
+            <p className="">
+              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+              The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using &apos;Content here, content here&apos;, making it look like readable English. 
+              <span className='text-gray-400'>read more ...</span>
+            </p>
           </div>
           <div className="self-center flex flex-col justify-center">
           

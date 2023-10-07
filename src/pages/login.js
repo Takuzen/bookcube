@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth } from "./utils/firebase";
+import { auth } from "../lib/firebase";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Link from 'next/link';
 
@@ -68,7 +68,7 @@ export default function Login() {
         </form>
         <div style={{ textAlign: 'center', marginTop: '15px' }}>
           <Link href="/signup">
-            <p>Don't have an account? Sign Up</p>
+            <p>Don&apos;t have an account? Sign Up</p>
           </Link>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { db, auth } from './utils/firebase';
+import { useEffect, useState, useMemo } from 'react';
+import { db, auth } from '../lib/firebase';
 import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
 import BookCube from './cubeRender';
 
@@ -10,15 +10,18 @@ export default function Generated() {
   const [userId, setUserId] = useState(null);
   const [cubeId, setCubeId] = useState(null);
   const [isWebShareSupported, setIsWebShareSupported] = useState(false);
-  let addedBooks = {};
 
-  if (books) {
-    try {
-      addedBooks = JSON.parse(books);
-    } catch (error) {
-      console.error('Failed to parse books:', error);
+  const addedBooks = useMemo(() => {
+    let parsedBooks = {};
+    if (books) {
+      try {
+        parsedBooks = JSON.parse(books);
+      } catch (error) {
+        console.error('Failed to parse books:', error);
+      }
     }
-  }
+    return parsedBooks;
+  }, [books]);
 
   useEffect(() => {
     // Check Web Share API support

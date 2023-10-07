@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db } from "./utils/firebase";
+import { auth, db } from "../lib/firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDocs, collection, query, where } from 'firebase/firestore';
 
