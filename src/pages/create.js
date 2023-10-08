@@ -1,33 +1,50 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { useState, useEffect } from 'react'
-import Search from './search'
-import { useRouter } from 'next/router'
+import Image from 'next/image';
+import Search from './search';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { useRouter } from 'next/router';
+import { db } from '../lib/firebase';
+import { collection, setDoc, doc } from 'firebase/firestore';
 
 export default function Create() {
+  const { userId } = useContext(AuthContext);
   const [boxes, setBoxes] = useState([1]);
-  const [cubeDescription, setCubeDescription] = useState("");
+  const [cubeName, setCubeName] = useState("");
   const [addedBooks, setAddedBooks] = useState({});
   const router = useRouter();
 
-  const generateCube = () => {
-    router.push({
-      pathname: '/generated',
-      query: { books: JSON.stringify(addedBooks) }
-    });
-  };
+  const generateCube = async () => {
+    if (cubeName) {
+      const userRef = doc(db, 'users', userId);
+      const cubeRef = doc(userRef, 'cubes', cubeName);
+      try {
+        await setDoc(cubeRef, { timestamp: Date.now() }, { merge: true });
+        const booksCollectionRef = collection(cubeRef, 'books');
+        for (let i = 0; i < Object.keys(addedBooks).length; i++) {
+          const bookRef = doc(booksCollectionRef, `book_${i}`);
+          await setDoc(bookRef, addedBooks[i], { merge: true });
+        }
+        console.log('Cube saved successfully');
+        router.push('/generated');
+      } catch (error) {
+        console.error('Error saving cube:', error);
+      }
+    } else {
+      console.error('Cube Name is required');
+    }
+  };  
 
   const addBook = (book, boxIndex) => {
     setAddedBooks({
       ...addedBooks,
-      [boxIndex]: { ...book, thoughts: '' }
+      [boxIndex]: { ...book, caption: '' }
     });
   };
 
-  const updateThoughts = (thoughts, boxIndex) => {
+  const updateCaption = (caption, boxIndex) => {
     setAddedBooks({
       ...addedBooks,
-      [boxIndex]: { ...addedBooks[boxIndex], thoughts }
+      [boxIndex]: { ...addedBooks[boxIndex], caption }
     });
   };
 
@@ -43,12 +60,7 @@ export default function Create() {
     }
   };
 
-  const isGenerateDisabled = Object.keys(addedBooks).length === 0;
-
-  const generateCubeQuery = {
-    pathname: '/generated',
-    query: { books: JSON.stringify(addedBooks) },
-  };
+  const isGenerateDisabled = Object.keys(addedBooks).length === 0 || !cubeName;
 
   useEffect(() => {
     return () => {
@@ -67,8 +79,8 @@ export default function Create() {
           <input 
             type="text" 
             placeholder="Cube Name" 
-            value={cubeDescription} 
-            onChange={(e) => setCubeDescription(e.target.value)} 
+            value={cubeName} 
+            onChange={(e) => setCubeName(e.target.value)} 
           />
           <div className='text-lg'>
           <p>You can add up to 6 books each cube.</p>
@@ -90,9 +102,9 @@ export default function Create() {
                   <p>{addedBooks[index].author}</p>
                   <input 
                     type="text" 
-                    placeholder="Your thoughts..." 
-                    value={addedBooks[index].thoughts} 
-                    onChange={(e) => updateThoughts(e.target.value, index)}
+                    placeholder="Write a caption..." 
+                    value={addedBooks[index].caption} 
+                    onChange={(e) => updateCaption(e.target.value, index)}
                   />
                   <button onClick={() => removeBook(index)} className="bg-red-500 text-white rounded px-2 py-1 mt-2">Remove</button>
                 </>
@@ -115,11 +127,15 @@ export default function Create() {
             <button onClick={addBox}><p>+</p></button>
           </div>
         )}
-        <div>
-          <Link href={isGenerateDisabled ? '' : generateCubeQuery} className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed' : 'text-[#DB4D6D]'}>
-              Generate Cube
-          </Link>
-        </div>
+      <div>
+        <button 
+          onClick={generateCube} 
+          className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed' : 'text-[#DB4D6D]'}
+          disabled={isGenerateDisabled}
+        >
+          Generate Cube
+        </button>
+      </div>
       </main>
     </>
   )

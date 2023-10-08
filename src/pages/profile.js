@@ -1,7 +1,7 @@
+import Image from 'next/image';
 import React, { useEffect, useContext, useState } from 'react';
 import { db } from '../lib/firebase';
 import { getDoc, doc } from 'firebase/firestore';
-import Image from 'next/image';
 import { AuthContext } from '../contexts/AuthContext';
 
 export default function Profile() {

@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState, useMemo } from 'react';
-import { db, auth } from '../lib/firebase';
-import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { useState, useMemo } from 'react';
 import BookCube from './cubeRender';
 
 export default function Generated() {
@@ -22,29 +20,6 @@ export default function Generated() {
     }
     return parsedBooks;
   }, [books]);
-
-  useEffect(() => {
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUserId(user.uid);
-
-        const userRef = doc(db, 'users', user.uid);
-        const cubesCollectionRef = collection(userRef, 'cubes');
-
-        try {
-          const docRef = await addDoc(cubesCollectionRef, {
-            books: addedBooks,
-            timestamp: Date.now(),
-            // Add any additional fields you need
-          });
-          setCubeId(docRef.id);
-          console.log('Cube saved successfully:', docRef.id);
-        } catch (error) {
-          console.error('Error saving cube:', error);
-        }
-      }
-    });
-  }, [addedBooks]);
 
   const handleDownload = () => {
     const canvas = document.querySelector('canvas');

@@ -32,8 +32,8 @@ export default function Home() {
                 <Image
                   src="/default_profile_image.png"
                   alt="Default Profile Image"
-                  width={40}
-                  height={40}
+                  width={50}
+                  height={50}
                   className="rounded-full"
                   priority
                 />
@@ -61,13 +61,12 @@ export default function Home() {
           <div className="flex flex-col gap-7">
           <div className='self-center'>
             <Link href="">
-              <p>@Username</p>
+              <p>@booksp.offcial</p>
             </Link>
           </div>
           <div className="">  
             <p className="">
-              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
-              The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using &apos;Content here, content here&apos;, making it look like readable English. 
+              These six books are selected for 2023 Hugo Award, which is the most prestigious award for science fiction and fantasy. The announcement of the winner will be on October 21th.
               <span className='text-gray-400'>read more ...</span>
             </p>
           </div>
