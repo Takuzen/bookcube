@@ -1,26 +1,17 @@
 import Head from 'next/head';
-import Link from 'next/link'
-import Image from 'next/image'
-import BookCube from './cubeRender';
-import { useState, useEffect } from 'react';
-import { auth } from "../lib/firebase";
+import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect, useContext, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Home() {
-  const [user, setUser] = useState(null);
+  const { userId } = useContext(AuthContext);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Client-side only code
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-    return () => unsubscribe(); // Cleanup subscription
+    setIsClient(true);
   }, []);
-
+  
   return (
     <>
       <Head>
@@ -35,7 +26,7 @@ export default function Home() {
           </h1>
         </div>
         <div id="auth" className="flex gap-10 items-center">
-          {user ? (
+          {userId ? (
             <div>
               <Link href="/profile">
                 <Image
@@ -58,7 +49,7 @@ export default function Home() {
               </Link>
             </>
           )}
-      </div>
+        </div>
         </section>
         <section id="weekly-pick" className="z-10 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100vw]">
           <div className='self-center'>
@@ -91,7 +82,7 @@ export default function Home() {
           </div>
         </section>
         <div className="self-center">
-        {user ? (
+        {userId ? (
           <Link href="/create">
             <button className="absolute bottom-10 right-10 bg-[#f5bf34] hover:opacity-70 text-white font-bold font-serif py-4 px-12 rounded-full">
               Create Your Cube

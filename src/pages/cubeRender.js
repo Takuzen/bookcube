@@ -1,8 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import * as THREE from 'three';
+import { db, auth } from '../lib/firebase';
+import { doc, collection, addDoc } from 'firebase/firestore';
+import { AuthContext } from '../contexts/AuthContext';
 
 const BookCube = ({ addedBooks }) => {
+  const { userId, setUserId } = useContext(AuthContext);
+
   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUserId(user.uid);
+        const userRef = doc(db, 'users', user.uid);
+        const cubesCollectionRef = collection(userRef, 'cubes');
+        try {
+          const docRef = await addDoc(cubesCollectionRef, {
+            books: addedBooks,
+            timestamp: Date.now(),
+            userId: user.uid,
+          });
+          console.log('Cube saved successfully:', docRef.id);
+        } catch (error) {
+          console.error('Error saving cube:', error);
+        }
+      }
+    });
+
     // Remove existing canvas if any
     const container = document.getElementById('book-cube-container');
     const existingCanvas = container.querySelector('canvas');
@@ -53,7 +76,7 @@ const BookCube = ({ addedBooks }) => {
         }
       );
     }
-  }, [addedBooks]);
+  }, [addedBooks, setUserId]);
 
   return <div id="book-cube-container"></div>;
 };

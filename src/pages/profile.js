@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../lib/firebase';
+import React, { useEffect, useContext, useState } from 'react';
+import { db } from '../lib/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 import Image from 'next/image';
+import { AuthContext } from '../contexts/AuthContext';
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const { userId } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
-  
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const docRef = doc(db, 'users', currentUser.uid);
+    if (userId) {
+      const fetchData = async () => {
+        const docRef = doc(db, 'users', userId);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
           setUserInfo(docSnap.data());
         } else {
           console.log("No such document!");
         }
-      } else {
-        console.log("No user is signed in.");
-      }
-    });
+      };
+      fetchData();
+    } else {
+      console.log("No user is signed in.");
+    }
+  }, [userId]);
 
-    return () => unsubscribe();  // Cleanup subscription
-  }, []);
-  
   return (
     <div>
       <div style={{ width: '20%', float: 'left', height: '100vh', backgroundColor: '#f2f2f2' }}>
@@ -36,10 +35,10 @@ export default function Profile() {
         {userInfo ? (
           <>
             <h2>User Profile</h2>
-            <Image src="/default_profile_image.png" alt="Profile Default Image" width={100} height={100} />
-            <p>Username: {user.displayName}</p>
+            <Image src="/default_profile_image.png" alt="Profile Default Image" width={100} height={100} priority/>
+            <p>Username: {userInfo.displayName}</p>
             <p>Name: {userInfo.givenName} {userInfo.familyName}</p>
-            <p>Email: {user.email}</p>
+            <p>Email: {userInfo.email}</p>
             {/* Add your cubes feed here */}
           </>
         ) : (

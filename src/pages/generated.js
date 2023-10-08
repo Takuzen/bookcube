@@ -24,9 +24,6 @@ export default function Generated() {
   }, [books]);
 
   useEffect(() => {
-    // Check Web Share API support
-    setIsWebShareSupported('share' in navigator);
-
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUserId(user.uid);
@@ -56,34 +53,56 @@ export default function Generated() {
     const imgURL = canvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = imgURL;
-    link.download = 'cube.png';
+    link.download = 'bookcube.png';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const handleShare = () => {
-    if (userId && cubeId) {
-      const url = `https://bookcube.vercel.app/cube/${userId}/${cubeId}`;
-      if (navigator.share) {
-        navigator.share({
-          title: 'Check out my cube!',
-          url: url,
-        }).catch((error) => {
-          console.error('Sharing failed', error);
-        });
-      }
-    }
-  };
+const toBlob = (base64) => {
+  const decodedData = atob(base64.replace(/^.*,/, ""));
+  const buffers = new Uint8Array(decodedData.length);
+  for (let i = 0; i < decodedData.length; i++) {
+    buffers[i] = decodedData.charCodeAt(i);
+  }
+  try {
+    const blob = new Blob([buffers.buffer], { type: "image/png" });
+    return blob;
+  } catch (e) {
+    return null;
+  }
+};
+
+const handleShare = () => {
+  const canvas = document.querySelector('canvas');
+  const dataURL = canvas.toDataURL('image/png');
+  const blob = toBlob(dataURL);
+  const file = new File([blob], 'image.png', { type: 'image/png' });
+  const url = `https://bookcube.vercel.app/cube/${userId}/${cubeId}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Check out my cube!',
+      url: url,
+      files: [file],
+    }).catch(error => {
+      console.error('Sharing failed', error);
+    });
+  }
+};
 
   return (
-    <div>
-      <BookCube addedBooks={addedBooks} />
-      {isWebShareSupported ? (
-        <button onClick={handleShare}>Share</button>
-      ) : (
-        <button onClick={handleDownload}>Download Cube</button>
-      )}
+    <div className="flex flex-col items-center h-screen pt-20">
+      <div className="w-150 h-150">
+        <BookCube addedBooks={addedBooks} />
+      </div>
+      <div className="mt-5">
+        {isWebShareSupported ? (
+          <button className="bg-[#f5bf34] text-white px-4 py-2 rounded" onClick={handleShare}>Share</button>
+        ) : (
+          <button className="bg-[#f5bf34] text-white px-4 py-2 rounded" onClick={handleDownload}>Save in PNG</button>
+        )}
+      </div>
     </div>
   );
 }
