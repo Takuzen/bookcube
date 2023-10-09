@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { useRouter } from 'next/router';
 import { db } from '../lib/firebase';
 import { collection, setDoc, doc } from 'firebase/firestore';
+import { generateAndUploadGLTF } from './cubeRender';
 
 export default function Create() {
   const { userId } = useContext(AuthContext);
@@ -14,6 +15,7 @@ export default function Create() {
   const router = useRouter();
 
   const generateCube = async () => {
+    console.log('generateCube called');
     if (cubeName) {
       const userRef = doc(db, 'users', userId);
       const cubeRef = doc(userRef, 'cubes', cubeName);
@@ -24,8 +26,15 @@ export default function Create() {
           const bookRef = doc(booksCollectionRef, `book_${i}`);
           await setDoc(bookRef, addedBooks[i], { merge: true });
         }
+
+        // Call the exportGLTF function to generate and upload the glTF file
+        // Assume the scene object is accessible; replace with your actual scene object
+        await generateAndUploadGLTF(addedBooks, userId, cubeName);
+        console.log('generateAndUploadGLTF finished');
+
         console.log('Cube saved successfully');
         router.push('/generated');
+        console.log('router.push called');
       } catch (error) {
         console.error('Error saving cube:', error);
       }
