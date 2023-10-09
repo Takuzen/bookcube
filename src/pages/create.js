@@ -33,7 +33,7 @@ export default function Create() {
         console.log('generateAndUploadGLTF finished');
 
         console.log('Cube saved successfully');
-        router.push('/generated');
+        router.push(`/generated?userId=${userId}&cubeName=${encodeURIComponent(cubeName)}`);
         console.log('router.push called');
       } catch (error) {
         console.error('Error saving cube:', error);
