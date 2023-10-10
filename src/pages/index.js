@@ -3,9 +3,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { db } from '../lib/firebase';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Home() {
   const { userId } = useContext(AuthContext);
+  const [userInfo, setUserInfo] = useState(null);
+  const [cubes, setCubes] = useState([]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -97,6 +101,9 @@ export default function Home() {
             </Link>
           </div>
           </div>
+        </section>
+        <section id="cube-feed" className="z-10 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
+          {/* The Latest to Old Cube Feeds */}
         </section>
         <div className="self-center">
         {userId ? (
