@@ -28,18 +28,22 @@ export default function Profile() {
 
   return (
     <div>
-      <div style={{ width: '20%', float: 'left', height: '100vh', backgroundColor: '#f2f2f2' }}>
-        <p>Profile</p>
+      <div className='flex flex-col pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
+        <p className='self-center text-lg hover: cursor-pointer hover:underline hover:underline-offset-8'>Main</p>
       </div>
-      <div style={{ width: '80%', float: 'left', padding: '20px' }}>
+      <div className="flex flex-col" style={{ width: '90%', float: 'left', padding: '20px' }}>
         {userInfo ? (
           <>
-            <h2>User Profile</h2>
-            <Image src="/default_profile_image.png" alt="Profile Default Image" width={100} height={100} priority/>
-            <p>Username: {userInfo.displayName}</p>
-            <p>Name: {userInfo.givenName} {userInfo.familyName}</p>
-            <p>Email: {userInfo.email}</p>
-            {/* Add your cubes feed here */}
+            <div className="flex flex-col items-center gap-7 pt-10">
+              <h2>User Profile</h2>
+              <Image src="/default_profile_image.png" alt="Profile Default Image" width={100} height={100} priority/>
+              <p>Username: {userInfo.username}</p>
+              <p>Name: {userInfo.givenName} {userInfo.familyName}</p>
+              <p>Email: {userInfo.email}</p>
+            </div>
+            <div id="profile-cube-feed">
+              {/* Cube Feed */}
+            </div>
           </>
         ) : (
           <p>Loading profile...</p>

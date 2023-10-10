@@ -15,15 +15,18 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>BookCube</title>
+        <title>BookSP</title>
         <meta name="description" content="本のキューブ" />
       </Head>
       <main className="flex min-h-[100vh] flex-col items-start p-10 gap-10">
         <section className="flex justify-between w-full">
-        <div className="font-bold font-serif text-4xl">
-          <h1 className='tracking-wide'>
-            Book SP
-          </h1>
+        <div className="flex gap-1 font-bold font-serif text-3xl">
+          <p className='tracking-wide'>
+            Book
+          </p>
+          <p>
+            SP
+          </p>
         </div>
         <div id="auth" className="flex gap-10 items-center">
           {userId ? (
@@ -53,7 +56,7 @@ export default function Home() {
         </section>
         <section id="weekly-pick" className="z-10 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
           <div className='self-center'>
-            <p className='text-[#DB4D6D] font-black font-serif text-xl'>Weekly Pick</p>
+            <p className='text-[#DB4D6D] font-black font-serif text-3xl'>Weekly Pick</p>
           </div>
           <div className='self-center'> 
             { isClient ? 
