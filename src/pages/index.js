@@ -24,12 +24,12 @@ export default function Home() {
       </Head>
       <main className="flex min-h-[100vh] flex-col items-start p-10 gap-10">
         <section className="flex justify-between w-full">
-        <div className="flex gap-1 font-bold font-serif text-3xl">
-          <p className='tracking-wide'>
-            Book
+        <div className="self-center flex gap-1 font-serif text-2xl">
+          <p className='self-end tracking-wide mr-2'>
+            BookSP
           </p>
-          <p>
-            SP
+          <p className='tracking-wide font-black text-3xl'>
+            Facade
           </p>
         </div>
         <div id="auth" className="flex gap-10 items-center">
@@ -102,7 +102,7 @@ export default function Home() {
           </div>
           </div>
         </section>
-        <section id="cube-feed" className="z-10 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
+        <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
           {/* The Latest to Old Cube Feeds */}
         </section>
         <div className="self-center">

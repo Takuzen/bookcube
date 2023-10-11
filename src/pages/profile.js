@@ -1,5 +1,4 @@
 
-import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
@@ -40,7 +39,7 @@ export default function Profile() {
   return (
     <div>
       <div className='flex flex-col pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
-        <p className='self-center text-lg hover:cursor-pointer hover:underline hover:underline-offset-8'>Main</p>
+        <p className='self-center text-lg hover:cursor-pointer underline underline-offset-8'>Main</p>
       </div>
       <div className="flex flex-col" style={{ width: '90%', float: 'left', padding: '20px' }}>
         {userInfo ? (
