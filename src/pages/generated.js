@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getFirestore, doc, getDoc, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 const useGltfUrl = (userId, cubeCaption) => {
   const [gltfUrl, setGltfUrl] = useState(null);
@@ -40,11 +40,27 @@ export default function Generated() {
 
   const handlePost = async () => {
     const db = getFirestore();
+    const userDocRef = doc(db, `users/${userId}`);
+    let username = '';
+    
+    try {
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        username = userDoc.data().username;
+      } else {
+        console.error('No such user document!');
+      }
+    } catch (error) {
+      console.error('Error fetching user document:', error);
+    }
+  
     try {
       await addDoc(collection(db, 'allcubes'), {
         userId,
+        username,
         cubeCaption,
         gltfUrl,
+        createdAt: serverTimestamp(),
       });
       console.log('Cube successfully posted to allcubes collection!');
     } catch (error) {

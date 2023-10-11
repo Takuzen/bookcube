@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { db } from '../lib/firebase';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 
 export default function Home() {
   const { userId } = useContext(AuthContext);
@@ -13,6 +13,17 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const q = query(collection(db, 'allcubes'), orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const cubesData = [];
+      querySnapshot.forEach((doc) => {
+        cubesData.push({ id: doc.id, ...doc.data() });
+      });
+      setCubes(cubesData);
+    };
+  
+    fetchData();
     setIsClient(true);
   }, []);
   
@@ -102,9 +113,32 @@ export default function Home() {
           </div>
           </div>
         </section>
-        <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
-          {/* The Latest to Old Cube Feeds */}
-        </section>
+        <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center w-[100%]">
+        <div className="flex flex-wrap justify-center gap-5">
+          {cubes.length ? (
+            cubes.map((cube) => (
+              <div key={cube.id} className='flex flex-col'>
+                <p className='self-start font-serif'>{cube.username}</p>
+                { isClient ? 
+                  <model-viewer
+                    style={{ height: '200px' }}
+                    src={cube.gltfUrl}
+                    alt={cube.cubeCaption}
+                    width="100px"
+                    height="100px"
+                    rotation-per-second="30deg"
+                    camera-orbit="0deg 0deg 20m"
+                    shadow-intensity="1"
+                  ></model-viewer>
+                : 'Loading model...' }
+                <p className='self-center font-serif'>{cube.cubeCaption}</p>
+              </div>
+            ))
+          ) : (
+            <p>Loading cubes...</p>
+          )}
+        </div>
+      </section>
         <div className="self-center">
         {userId ? (
           <Link href="/create">

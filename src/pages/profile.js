@@ -1,15 +1,27 @@
-
 import Image from 'next/image';
 import { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { db } from '../lib/firebase';
 import { doc, getDoc, collection, query, getDocs } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
+import { auth } from '../lib/firebase';
+import { useRouter } from 'next/router';
 
 export default function Profile() {
   const { userId } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
   const [cubes, setCubes] = useState([]);
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      console.log('Logged out successfully');
+      router.push('/');
+    }).catch((error) => {
+      console.error('Error during logout:', error);
+    });
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -38,8 +50,11 @@ export default function Profile() {
 
   return (
     <div>
-      <div className='flex flex-col pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
+      <div className='flex flex-col justify-between pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
         <p className='self-center text-lg hover:cursor-pointer underline underline-offset-8'>Main</p>
+        <button onClick={handleLogout} className="self-center mb-10 bg-red-500 hover:bg-red-700 text-white py-2 px-4 font-sans rounded-full">
+          Logout
+        </button>
       </div>
       <div className="flex flex-col" style={{ width: '90%', float: 'left', padding: '20px' }}>
         {userInfo ? (
@@ -55,8 +70,7 @@ export default function Profile() {
                   { isClient ? 
                   <model-viewer
                     style={{ height: '200px' }}
-                    src={cube.gltfUrl}  // Directly using the complete URL from Firestore
-                    alt={cube.name}
+                    src={cube.gltfUrl}
                     width="100px"
                     height="100px"
                     rotation-per-second="30deg"
