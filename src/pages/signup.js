@@ -32,19 +32,10 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const isUsernameUnique = async () => {
-    const q = query(collection(db, 'users'), where('username', '==', username));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.empty;
-  };
+  {/* usernameUniquenessCheck using Firebase Cloud Functions, later */}
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-  
-    if (!(await isUsernameUnique())) {
-      setError('Username already exists. Please choose another.');
-      return;
-    }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -61,7 +52,7 @@ export default function SignUp() {
       });
   
       console.log('User signed up successfully!');
-      router.push('/profile');
+      router.push('/');
     } catch (error) {
       const errorMessage = error.code ? getErrorMessage(error.code) : 'An error occurred. Please try again.';
       setError(errorMessage);

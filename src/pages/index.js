@@ -60,7 +60,7 @@ export default function Home() {
           ) : (
             <>
               <Link href="/login">
-                <div className="">Login</div>
+                <div className="">Log In</div>
               </Link>
               <Link href="/signup">
                 <div className="bg-[#f5bf34] text-white font-bold px-5 py-2 rounded-lg hover:opacity-70">Sign Up</div>
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
         </section>
         <section id="weekly-pick" className="z-10 py-5 gap-7 flex flex-col justify-center bg-[#d7ecea] w-[100%]">
-          <div className='self-center'>
+          <div className='self-center pt-5'>
             <p className='text-[#DB4D6D] font-black font-serif text-3xl'>Weekly Pick</p>
           </div>
           <div className='self-center'> 
@@ -84,7 +84,7 @@ export default function Home() {
               auto-rotate
               rotation-per-second="30deg"
               camera-controls
-              camera-orbit="45deg 55deg 20m"
+              camera-orbit="45deg 90deg 20m"
               shadow-intensity="1"></model-viewer>
               : 'Loading model...' }
           </div>
@@ -127,7 +127,7 @@ export default function Home() {
                     width="100px"
                     height="100px"
                     rotation-per-second="30deg"
-                    camera-orbit="0deg 0deg 20m"
+                    camera-orbit="45deg 45deg 20m"
                     shadow-intensity="1"
                   ></model-viewer>
                 : 'Loading model...' }
