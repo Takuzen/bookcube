@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 
-export const generateAndUploadGLTF = async (addedBooks, userId, cubeName) => {
+export const generateAndUploadGLTF = async (addedBooks, userId, cubeCaption) => {
   console.log('generateAndUploadGLTF called');
   const scene = new THREE.Scene();
   console.log('new scene created');
@@ -70,13 +70,13 @@ export const generateAndUploadGLTF = async (addedBooks, userId, cubeName) => {
     console.log('Got storage');
     const db = getFirestore();
     console.log('Got Firestore');
-    const storageRef = ref(storage, `users/${userId}/cubes/${cubeName}/${cubeName}.glb`);
+    const storageRef = ref(storage, `users/${userId}/cubes/${cubeCaption}/${cubeCaption}.glb`);
     try {
         const uploadResult = await uploadBytes(storageRef, blob);
         console.log('Upload result:', uploadResult);
         const downloadURL = await getDownloadURL(storageRef);
         console.log('Download URL:', downloadURL);
-        const cubeDoc = doc(db, 'users', userId, 'cubes', cubeName);
+        const cubeDoc = doc(db, 'users', userId, 'cubes', cubeCaption);
         await updateDoc(cubeDoc, { gltfUrl: downloadURL });
         console.log('Doc updated with gltfUrl:', downloadURL);
     } catch (error) {

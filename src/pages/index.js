@@ -37,10 +37,10 @@ export default function Home() {
             <div>
               <Link href="/profile">
                 <Image
-                  src="/default_profile_image.png"
+                  src="/person-circle-outline.svg"
                   alt="Default Profile Image"
-                  width={50}
-                  height={50}
+                  width={30}
+                  height={30}
                   className="rounded-full"
                   priority
                 />

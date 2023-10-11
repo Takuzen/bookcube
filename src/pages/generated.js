@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, collection } from 'firebase/firestore';
 
-const useGltfUrl = (userId, cubeName) => {
+const useGltfUrl = (userId, cubeCaption) => {
   const [gltfUrl, setGltfUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (userId && cubeName) {
+    if (userId && cubeCaption) {
       const fetchGltfUrl = async () => {
         const db = getFirestore();
-        const cubeDocRef = doc(db, `users/${userId}/cubes/${cubeName}`);
+        const cubeDocRef = doc(db, `users/${userId}/cubes/${cubeCaption}`);
         try {
           const cubeDoc = await getDoc(cubeDocRef);
           if (cubeDoc.exists()) {
@@ -22,21 +22,35 @@ const useGltfUrl = (userId, cubeName) => {
         } catch (error) {
           console.error('Error fetching document:', error);
         } finally {
-          setLoading(false);  // Ensure loading is set to false in all cases
+          setLoading(false);
         }
       };
       fetchGltfUrl();
     }
-  }, [userId, cubeName]);
+  }, [userId, cubeCaption]);
 
   return { gltfUrl, loading };
 };
 
 export default function Generated() {
   const router = useRouter();
-  const { userId, cubeName } = router.query;
+  const { userId, cubeCaption } = router.query;
 
-  const { gltfUrl, loading } = useGltfUrl(userId, cubeName);
+  const { gltfUrl, loading } = useGltfUrl(userId, cubeCaption);
+
+  const handlePost = async () => {
+    const db = getFirestore();
+    try {
+      await addDoc(collection(db, 'allcubes'), {
+        userId,
+        cubeCaption,
+        gltfUrl,
+      });
+      console.log('Cube successfully posted to allcubes collection!');
+    } catch (error) {
+      console.error('Error posting cube:', error);
+    }
+  };
 
   useEffect(() => {
     // This useEffect will re-run whenever router.query changes
@@ -45,13 +59,14 @@ export default function Generated() {
 
   return (
     <div className="flex flex-col items-center h-screen pt-20">
-      <div className="w-150 h-150">
+      <div className="">
         {loading ? (
           <p>Loading...</p>
         ) : (
           gltfUrl && (
             <model-viewer
               src={gltfUrl}
+              style={{ height: '300px' }}
               alt="A 3D model of a cube"
               auto-rotate
               camera-controls
@@ -59,6 +74,13 @@ export default function Generated() {
             ></model-viewer>
           )
         )}
+      </div>
+      <div>
+        <p>{cubeCaption}</p>
+      </div>
+      <div>
+        <button onClick={() => handlePost(userId, cubeCaption, gltfUrl)}>Post</button>
+        {/* Share Button */}
       </div>
     </div>
   );

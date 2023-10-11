@@ -10,15 +10,15 @@ import { generateAndUploadGLTF } from './cubeRender';
 export default function Create() {
   const { userId } = useContext(AuthContext);
   const [boxes, setBoxes] = useState([1]);
-  const [cubeName, setCubeName] = useState("");
+  const [cubeCaption, setCubeCaption] = useState("");
   const [addedBooks, setAddedBooks] = useState({});
   const router = useRouter();
 
   const generateCube = async () => {
     console.log('generateCube called');
-    if (cubeName) {
+    if (cubeCaption) {
       const userRef = doc(db, 'users', userId);
-      const cubeRef = doc(userRef, 'cubes', cubeName);
+      const cubeRef = doc(userRef, 'cubes', cubeCaption);
       try {
         await setDoc(cubeRef, { timestamp: Date.now() }, { merge: true });
         const booksCollectionRef = collection(cubeRef, 'books');
@@ -29,11 +29,11 @@ export default function Create() {
 
         // Call the exportGLTF function to generate and upload the glTF file
         // Assume the scene object is accessible; replace with your actual scene object
-        await generateAndUploadGLTF(addedBooks, userId, cubeName);
+        await generateAndUploadGLTF(addedBooks, userId, cubeCaption);
         console.log('generateAndUploadGLTF finished');
 
         console.log('Cube saved successfully');
-        router.push(`/generated?userId=${userId}&cubeName=${encodeURIComponent(cubeName)}`);
+        router.push(`/generated?userId=${userId}&cubeCaption=${encodeURIComponent(cubeCaption)}`);
         console.log('router.push called');
       } catch (error) {
         console.error('Error saving cube:', error);
@@ -69,7 +69,7 @@ export default function Create() {
     }
   };
 
-  const isGenerateDisabled = Object.keys(addedBooks).length === 0 || !cubeName;
+  const isGenerateDisabled = Object.keys(addedBooks).length === 0 || !cubeCaption;
 
   useEffect(() => {
     return () => {
@@ -84,16 +84,8 @@ export default function Create() {
   return (
     <>
       <main className="flex min-h-screen flex-col justify-center p-24 gap-10">
-        <div className="font-bold font-serif text-4xl mb-4">
-          <input 
-            type="text" 
-            placeholder="Cube Name" 
-            value={cubeName} 
-            onChange={(e) => setCubeName(e.target.value)} 
-          />
-          <div className='text-lg'>
-          <p>You can add up to 6 books each cube.</p>
-        </div>
+        <div className='font-bold font-serif text-lg'>
+          <p>You can add up to 6 books each cube.</p>        
         </div>
         <div className="flex flex-wrap gap-4">
           {boxes.map((box, index) => (
@@ -136,10 +128,18 @@ export default function Create() {
             <button onClick={addBox}><p>+</p></button>
           </div>
         )}
-      <div>
+      <div className="font-bold font-serif text-2xl mb-4">
+          <input 
+            type="text" 
+            placeholder="Cube Caption" 
+            value={cubeCaption} 
+            onChange={(e) => setCubeCaption(e.target.value)} 
+          />
+        </div>
+      <div className='self-center font-mono font-black '>
         <button 
           onClick={generateCube} 
-          className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed' : 'text-[#DB4D6D]'}
+          className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed' : 'bg-[#DB4D6D] text-white px-6 py-3 rounded-lg'}
           disabled={isGenerateDisabled}
         >
           Generate Cube
