@@ -12,6 +12,24 @@ export default function Home() {
   const [cubes, setCubes] = useState([]);
   const [isClient, setIsClient] = useState(false);
 
+  const TruncatedCaption = ({ caption }) => {
+    const [showMore, setShowMore] = useState(false);
+    const isLongCaption = caption.length > 125;
+  
+    const displayCaption = isLongCaption && !showMore ? caption.substring(0, 125) : caption;
+  
+    return (
+      <p className='text-start font-serif'>
+        {displayCaption}
+        {isLongCaption && (
+          <span onClick={() => setShowMore(!showMore)} style={{ cursor: "pointer", color: "gray" }}>
+            {showMore ? " ...less" : " ...more"}
+          </span>
+        )}
+      </p>
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const q = query(collection(db, 'allcubes'), orderBy('createdAt', 'desc'));
@@ -88,13 +106,13 @@ export default function Home() {
               shadow-intensity="1"></model-viewer>
               : 'Loading model...' }
           </div>
-          <div className="flex flex-col gap-7">
-          <div className='self-center'>
-            <Link href="">
-              <p>@booksp.offcial</p>
-            </Link>
-          </div>
-          <div className="self-center w-[500px]">  
+          <div className="flex flex-col gap-7 w-1/3 self-center">
+            <div className='self-center'>
+              <Link href="">
+                <p>@booksp.offcial</p>
+              </Link>
+            </div>
+          <div className="self-center">  
             <p className="">
               These six books are selected for 2023 Hugo Award, which is the most prestigious award for science fiction and fantasy.
             </p>
@@ -114,11 +132,15 @@ export default function Home() {
           </div>
         </section>
         <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center w-[100%]">
-        <div className="flex flex-wrap justify-center gap-5">
+        <div className="flex flex-wrap justify-center gap-5 w-1/3 self-center">
           {cubes.length ? (
             cubes.map((cube) => (
-              <div key={cube.id} className='flex flex-col'>
-                <p className='self-start font-serif'>{cube.username}</p>
+              <div key={cube.id} className='flex flex-col justify-center gap-10'>
+                <div className='flex gap-1'>
+                  <Image src="person-circle-outline.svg" alt="Default Profile Image" width={20} height={20} className="rounded-full" priority/>
+                  <p className='font-serif'>{cube.username}</p>
+                </div>
+                <div className='self-center'>
                 { isClient ? 
                   <model-viewer
                     style={{ height: '200px' }}
@@ -131,7 +153,8 @@ export default function Home() {
                     shadow-intensity="1"
                   ></model-viewer>
                 : 'Loading model...' }
-                <p className='self-center font-serif'>{cube.cubeCaption}</p>
+                </div>
+                <TruncatedCaption caption={cube.cubeCaption} />
               </div>
             ))
           ) : (
@@ -139,7 +162,7 @@ export default function Home() {
           )}
         </div>
       </section>
-        <div className="self-center">
+        <div className="z-20 self-center">
         {userId ? (
           <Link href="/create">
             <button className="absolute bottom-10 right-10 bg-[#f5bf34] hover:opacity-70 text-white font-bold font-serif py-4 px-12 rounded-full">

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
@@ -51,7 +52,12 @@ export default function Profile() {
   return (
     <div>
       <div className='flex flex-col justify-between pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
-        <p className='self-center text-lg hover:cursor-pointer underline underline-offset-8'>Main</p>
+        <div className='flex flex-col gap-10'>
+        <Link className='self-center' href='/'>
+          <p className='text-lg hover:cursor-pointer hover:opacity-70'>Home</p>
+        </Link>
+        <p className='self-center text-lg underline underline-offset-8'>Main</p>
+        </div>
         <button onClick={handleLogout} className="self-center mb-10 bg-red-500 hover:bg-red-700 text-white py-2 px-4 font-sans rounded-full">
           Logout
         </button>
@@ -74,7 +80,7 @@ export default function Profile() {
                     width="100px"
                     height="100px"
                     rotation-per-second="30deg"
-                    camera-orbit="0deg 0deg 20m"
+                    camera-orbit="45deg 45deg 20m"
                     shadow-intensity="1"
                   ></model-viewer>
                   : 'Loading model...' }
