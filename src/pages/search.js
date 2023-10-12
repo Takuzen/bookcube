@@ -6,6 +6,7 @@ const Search = ({ addBook }) => {
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const closeResults = () => {
     setShowResults(false);
@@ -31,6 +32,8 @@ const Search = ({ addBook }) => {
       return;
     }
 
+    setLoading(true);
+
     try {
       const apikey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
       const result = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apikey}`);
@@ -55,6 +58,8 @@ const Search = ({ addBook }) => {
     } catch (error) {
       console.error('Axios error:', error);
     }
+
+  setLoading(false);
   };
 
   const handleSubmit = (e) => {
@@ -74,19 +79,30 @@ const Search = ({ addBook }) => {
           </div>
         </div>
       </form>
-      {showResults && (
-        <div className="absolute top-full left-1/3 mt-16 bg-white p-4 rounded shadow-lg overflow-y-auto w-[800px] h-[600px] z-10">
+      { (loading || showResults) && (
+        <div className="absolute top-full left-1/3 mt-16 bg-white p-4 rounded shadow-lg overflow-y-auto w-[800px] max-h-[600px] z-10">
           <button onClick={closeResults} className="absolute top-1 right-1 bg-gray-400 text-white rounded-full w-5 h-5 flex items-center justify-center">
             X
           </button>
-          {books.map((book, index) => (
-            <div key={index} className="p-2">
-              {book.localThumbnail ? <Image src={book.localThumbnail} alt={`${book.title} cover`} width={100} height={130} className="mb-2"/> : <p>No Thumbnail</p>}
-              <h2>{book.title}</h2>
-              <p>{book.author}</p>
-              <button onClick={() => addBook(book)} className="bg-blue-500 text-white rounded px-2 py-1">Add</button>
+          {loading ? (
+            <div className="animation-container absolute top-0">
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
             </div>
-          ))}
+          ) : (
+            books.map((book, index) => (
+              <div key={index} className="p-2">
+                {book.localThumbnail ? 
+                  <Image src={book.localThumbnail} alt={`${book.title} cover`} width={100} height={130} className="mb-2"/> 
+                  : <p>No Thumbnail</p>
+                }
+                <h2>{book.title}</h2>
+                <p>{book.author}</p>
+                <button onClick={() => addBook(book)} className="bg-blue-500 text-white rounded px-2 py-1">Add</button>
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>

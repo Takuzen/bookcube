@@ -131,7 +131,7 @@ export default function Home() {
           </div>
           </div>
         </section>
-        <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center w-[100%]">
+        <section id="cube-feed" className="z-20 py-5 gap-7 flex flex-col justify-center w-[100%] ">
         <div className="flex flex-wrap justify-center gap-5 w-1/3 self-center">
           {cubes.length ? (
             cubes.map((cube) => (

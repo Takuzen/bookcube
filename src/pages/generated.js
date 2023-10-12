@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getFirestore, doc, getDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -68,6 +69,8 @@ export default function Generated() {
     } catch (error) {
       console.error('Error posting cube:', error);
     }
+
+    router.push('/');
   };
 
   useEffect(() => {
@@ -81,7 +84,7 @@ export default function Generated() {
   }, [router.query, loading]);
 
   return (
-    <div className="flex flex-col items-center h-screen pt-20">
+    <div className="flex flex-col items-center h-screen pt-20 w-1/3 mx-auto">
       <div className="">
         {loading ? (
           <p>Loading...</p>
@@ -94,27 +97,40 @@ export default function Generated() {
             </div>
           ) : (
             <>
-              {gltfUrl && (
-                <model-viewer
-                  src={gltfUrl}
-                  style={{ height: '300px' }}
-                  alt="A 3D model of a cube"
-                  auto-rotate
-                  camera-controls
-                  exposure="0.75"
-                ></model-viewer>
-              )}
-              <div>
-                <p>{cubeCaption}</p>
-              </div>
-              <div>
-                <button onClick={() => handlePost(userId, cubeCaption, gltfUrl)}>Post</button>
-                {/* Share Button */}
-              </div>
+              <h1 className="text-4xl text-center font-black text-green-500 mb-10 underline underline-offset-8">Congratulations!</h1>
+              <section className="flex flex-col justify-center gap-20">
+                <div className='h-[100%] font-serif self-center'>
+                  {gltfUrl && (
+                    <model-viewer
+                      src={gltfUrl}
+                      style={{ height: '300px' }}
+                      alt="A 3D model of a cube"
+                      auto-rotate
+                      camera-controls
+                      exposure="0.75"
+                    ></model-viewer>
+                  )}
+                </div>
+                <div>
+                    <p>{cubeCaption}</p>
+                  </div>
+                <div className='font-serif flex flex-col'>
+                  <button onClick={() => handlePost(userId, cubeCaption, gltfUrl)} className='rounded-lg bg-[#f5bf34] text-white px-20 py-3 font-black hover:opacity-70'>
+                    Post
+                  </button>
+                  {/* Share Button */}
+                  <div className='self-center flex-col gap-5'>
+                    <Link href="/">
+                      <p className='text-center mt-7 hover:opacity-70'><span>&#8592;</span> Back to home</p>                      
+                    </Link>
+                    <p className='text-gray-400 mt-5'><span>&#40;</span>the cube would be only saved in your profile page<span>&#41;</span></p>
+                  </div>
+                </div>
+              </section>
             </>
           )
         )}
       </div>
     </div>
-  );
+  );  
 }

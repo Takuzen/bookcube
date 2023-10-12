@@ -51,24 +51,24 @@ export default function Profile() {
 
   return (
     <div>
-      <div className='flex flex-col justify-between pt-10 text-white font-bold' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
+      <div className='flex flex-col justify-between pt-10 text-white font-bol font-serif' style={{ width: '10%', float: 'left', height: '100vh', backgroundColor: '#f0b699' }}>
         <div className='flex flex-col gap-10'>
         <Link className='self-center' href='/'>
           <p className='text-lg hover:cursor-pointer hover:opacity-70'>Home</p>
         </Link>
         <p className='self-center text-lg underline underline-offset-8'>Main</p>
         </div>
-        <button onClick={handleLogout} className="self-center mb-10 bg-red-500 hover:bg-red-700 text-white py-2 px-4 font-sans rounded-full">
+        <button onClick={handleLogout} className="self-center mb-10 hover:opacity-70 text-white py-2 px-4">
           Logout
         </button>
       </div>
-      <div className="flex flex-col" style={{ width: '90%', float: 'left', padding: '20px' }}>
+      <div className="flex flex-col font-serif" style={{ width: '90%', float: 'left', padding: '20px' }}>
         {userInfo ? (
           <>
             <div className="flex flex-col items-center gap-7 pt-10">
               <h2>User Profile</h2>
               <Image src="/default_profile_image.png" alt="Profile Default Image" width={100} height={100} priority/>
-              <p>{userInfo.username}</p>
+              <p>@{userInfo.username}</p>
             </div>
             <div className='flex flex-wrap justify-center gap-5 pt-20 hover:cursor-pointer' id="profile-cube-feed">
               {cubes.map((cube) => (
