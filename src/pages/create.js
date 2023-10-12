@@ -89,7 +89,7 @@ export default function Create() {
         </div>
         <div className="flex flex-wrap gap-4">
           {boxes.map((box, index) => (
-            <div key={index} className="border border-black rounded-lg w-72 h-auto p-4">
+            <div key={index} className="border border-black rounded-lg w-72 h-auto p-4 ">
               {addedBooks[index] ? (
                 <>
                   <Image 
@@ -101,13 +101,16 @@ export default function Create() {
                   />
                   <h2>{addedBooks[index].title}</h2>
                   <p>{addedBooks[index].author}</p>
-                  <input 
-                    type="text" 
-                    placeholder="Write a caption..." 
-                    value={addedBooks[index].caption} 
-                    onChange={(e) => updateCaption(e.target.value, index)}
-                  />
-                  <button onClick={() => removeBook(index)} className="bg-red-500 text-white rounded px-2 py-1 mt-2">Remove</button>
+                  <div className='flex flex-col mt-3 gap-3 font-serif overflow-y-hidden break-words' contentEditable="true">
+                    <input 
+                      type="text" 
+                      placeholder="Write a caption..." 
+                      value={addedBooks[index].caption} 
+                      onChange={(e) => updateCaption(e.target.value, index)}
+                      className='focus:outline-none break-words caret-[#f5bf34]'
+                    />
+                    <button onClick={() => removeBook(index)} className="bg-red-500 text-white rounded px-2 py-1 mt-2 font-light hover:opacity-70">Remove</button>
+                  </div>
                 </>
               ) : (
                 <>
@@ -124,27 +127,29 @@ export default function Create() {
         </div>
         {boxes.length === 6 && <div className="text-center text-red-500">For this moment, you can only add 6 books per cube. We are improving.</div>}
         {boxes.length < 6 && (
-          <div className="self-center hover:bg-[#f5bf34] hover:text-white hover:cursor-pointer hover:transition hover:delay-50 px-3 py-1 text-black font-medium text-2xl rounded-full">
+          <div className="self-center hover:bg-[#f5bf34] hover:text-white hover:cursor-pointer hover:transition hover:delay-50 px-6 pb-1 text-black font-medium text-2xl rounded-lg">
             <button onClick={addBox}><p>+</p></button>
           </div>
         )}
-      <div className="font-bold font-serif text-2xl mb-4">
+      <div className="font-serif text-lg mb-4">
           <input 
             type="text" 
-            placeholder="Cube Caption" 
+            placeholder="* Cube Caption" 
             value={cubeCaption} 
-            onChange={(e) => setCubeCaption(e.target.value)} 
+            onChange={(e) => setCubeCaption(e.target.value)}
+            className='focus:outline-none caret-[#f5bf34]' 
           />
         </div>
-      <div className='self-center font-mono font-black '>
-        <button 
-          onClick={generateCube} 
-          className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed' : 'bg-[#DB4D6D] text-white px-6 py-3 rounded-lg'}
-          disabled={isGenerateDisabled}
-        >
-          Generate Cube
-        </button>
-      </div>
+        <div className='self-center font-serif font-black flex flex-col justify-center'>
+          <button 
+            onClick={generateCube} 
+            className={isGenerateDisabled ? 'opacity-50 cursor-not-allowed text-xl line-through' : 'bg-[#DB4D6D] text-white px-6 py-3 rounded-lg hover:opacity-70'}
+            disabled={isGenerateDisabled}
+          >
+            Generate Cube !
+          </button>
+          {isGenerateDisabled && <p className='text-gray'><span>&#40;</span>At least one book and the starred fields are necessary.<span>&#41;</span></p>}
+        </div>
       </main>
     </>
   )
