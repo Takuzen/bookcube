@@ -38,6 +38,8 @@ export default function Generated() {
 
   const { gltfUrl, loading } = useGltfUrl(userId, cubeCaption);
 
+  const [showAnimation, setShowAnimation] = useState(true);
+
   const handlePost = async () => {
     const db = getFirestore();
     const userDocRef = doc(db, `users/${userId}`);
@@ -69,9 +71,14 @@ export default function Generated() {
   };
 
   useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        setShowAnimation(false);
+      }, 3000);
+    }
     // This useEffect will re-run whenever router.query changes
     // ensuring that useGltfUrl hook is called with updated values
-  }, [router.query]);
+  }, [router.query, loading]);
 
   return (
     <div className="flex flex-col items-center h-screen pt-20">
@@ -79,24 +86,34 @@ export default function Generated() {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          gltfUrl && (
-            <model-viewer
-              src={gltfUrl}
-              style={{ height: '300px' }}
-              alt="A 3D model of a cube"
-              auto-rotate
-              camera-controls
-              exposure="0.75"
-            ></model-viewer>
+          showAnimation ? (
+            <div className="animation-container">
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
+              <div className="bouncing-ball"></div>
+            </div>
+          ) : (
+            <>
+              {gltfUrl && (
+                <model-viewer
+                  src={gltfUrl}
+                  style={{ height: '300px' }}
+                  alt="A 3D model of a cube"
+                  auto-rotate
+                  camera-controls
+                  exposure="0.75"
+                ></model-viewer>
+              )}
+              <div>
+                <p>{cubeCaption}</p>
+              </div>
+              <div>
+                <button onClick={() => handlePost(userId, cubeCaption, gltfUrl)}>Post</button>
+                {/* Share Button */}
+              </div>
+            </>
           )
         )}
-      </div>
-      <div>
-        <p>{cubeCaption}</p>
-      </div>
-      <div>
-        <button onClick={() => handlePost(userId, cubeCaption, gltfUrl)}>Post</button>
-        {/* Share Button */}
       </div>
     </div>
   );
